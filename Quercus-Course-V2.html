@@ -43,6 +43,41 @@
 @media(max-width:420px){.demo-controls{padding-left:12px;padding-right:12px}.demo-main nav{display:grid;grid-template-columns:1fr 1fr;align-items:start}.setup-switch{grid-column:1/-1}.demo-main nav>a,.demo-main nav>button{text-align:left}.assignment-meta div{display:block}.assignment-meta dt,.assignment-meta dd{display:inline}.evidence-card dl{font-size:13px}}
 @media print{.recording-placeholder{min-height:0}.wide-dialog{display:none!important}}
 
+/* Demo control bar (outside the Quercus frame), redesigned 2026-11-21 for clarity and accessibility */
+.demo-controls{position:sticky;bottom:0;z-index:10;min-height:94px;padding:10px 24px 9px;background:#1f2a33;color:#fff;border-top:0;font-family:var(--q-font)}
+.demo-bar{display:flex;align-items:center;gap:12px 24px;flex-wrap:wrap}
+.demo-where{display:flex;flex-direction:column;gap:2px;min-width:170px}
+.demo-badge{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#c9d3da}
+.demo-stage{font-size:15px;line-height:22px;font-weight:700;color:#fff}
+.demo-setup{display:flex;align-items:center;gap:10px}
+.demo-label{font-size:14px;line-height:20px;color:#c9d3da}
+.demo-segmented{display:inline-flex;border:1px solid #9fb0bc;border-radius:6px;overflow:hidden}
+.demo-segmented button{min-height:36px;min-width:72px;padding:6px 14px;border:0;border-radius:0;background:transparent;color:#fff;font-size:14px;line-height:20px;font-weight:700;cursor:pointer}
+.demo-segmented button+button{border-left:1px solid #9fb0bc}
+.demo-segmented button[aria-pressed=true]{background:#fff;color:#1f2a33}
+.demo-segmented button[aria-pressed=false]:hover{background:#2f3e4a}
+.demo-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto}
+.demo-btn{display:inline-flex;align-items:center;min-height:36px;padding:6px 12px;border:1px solid #9fb0bc;border-radius:6px;background:transparent;color:#fff!important;font-size:14px;line-height:20px;font-weight:400;text-decoration:none!important;cursor:pointer;white-space:nowrap}
+.demo-btn:hover{background:#2f3e4a}
+.demo-btn-primary{border:2px solid #fff;font-weight:700}
+.demo-btn-context{border-color:#ffd34d;color:#ffd34d!important;font-weight:700}
+.demo-btn-quiet{border-color:transparent;text-decoration:underline!important;text-underline-offset:3px}
+.demo-btn[aria-pressed=true]{background:#2f3e4a;box-shadow:inset 0 0 0 2px #fff}
+.demo-btn:disabled{opacity:1;color:#c9d3da!important;border-style:dashed;cursor:default}
+.demo-controls button:focus-visible,.demo-controls a:focus-visible{outline:3px solid #ffd34d;outline-offset:2px}
+.demo-controls .demo-note{margin:8px 0 0;font-size:13px;line-height:18px;color:#c9d3da}
+.demo-note .project-disclaimer{color:#fff;font-weight:700;background:none;border:0;padding:0;margin:0;font-size:inherit;line-height:inherit;display:inline}
+.presentation-mode .demo-controls{padding-top:14px;padding-bottom:14px}
+.presentation-mode .demo-stage{font-size:20px;line-height:28px}
+.presentation-mode .demo-badge{font-size:14px}
+.presentation-mode .demo-label,.presentation-mode .demo-segmented button,.presentation-mode .demo-btn{font-size:18px;line-height:26px}
+.presentation-mode .demo-btn,.presentation-mode .demo-segmented button{min-height:44px}
+.presentation-mode .demo-controls .demo-note{font-size:16px;line-height:24px}
+@media(max-width:1100px){.demo-tools{margin-left:0;width:100%}}
+@media(max-width:767px){.demo-controls{position:relative;padding:12px 14px}}
+@media(max-width:420px){.demo-setup{width:100%;justify-content:space-between}.demo-btn{flex:1 1 auto;justify-content:center}}
+@media print{.demo-controls{display:none}}
+
 </style>
 </head>
 <body>
@@ -88,26 +123,30 @@
     </div>
   </div>
 
-  <footer class="demo-controls" aria-label="Prototype controls outside Quercus">
-    <div class="demo-main">
-      <div class="demo-status"><strong>GROUP 6 · LOCAL PROTOTYPE</strong><span id="stage-label">After setup · Home</span></div>
-      <nav aria-label="Presentation controls">
-        <div class="setup-switch" role="group" aria-label="Course setup">
-          <span>Course setup:</span>
+  <footer class="demo-controls" aria-label="Prototype controls, outside Quercus">
+    <div class="demo-bar">
+      <div class="demo-where">
+        <span class="demo-badge">Group 6 prototype</span>
+        <span id="stage-label" class="demo-stage">After setup · Home</span>
+      </div>
+      <div class="demo-setup" role="group" aria-labelledby="setup-label">
+        <span id="setup-label" class="demo-label">Course setup</span>
+        <div class="demo-segmented">
           <button type="button" data-setup="before" aria-pressed="false">Before</button>
           <button type="button" data-setup="after" aria-pressed="true">After</button>
         </div>
-        <button type="button" data-action="presenter">Presenter path</button>
-        <button type="button" data-action="evidence">Why this design?</button>
-        <button type="button" data-action="presentation-mode" aria-pressed="false">Presentation mode</button>
-        <a href="Faculty-Guideline-V2.html">Faculty guideline</a>
-        <button id="sample-file-control" type="button" data-action="sample-file" hidden>Use sample PDF</button>
-        <button id="release-feedback-control" type="button" data-action="release-feedback" disabled>Release sample feedback</button>
-        <button type="button" data-action="reset">Restart demo</button>
-      </nav>
+      </div>
+      <div class="demo-tools" role="group" aria-label="Demo tools">
+        <button type="button" class="demo-btn demo-btn-primary" data-action="presenter">Presenter path</button>
+        <button type="button" class="demo-btn" data-action="evidence">Why this design?</button>
+        <a class="demo-btn" href="Faculty-Guideline-V2.html">Faculty guideline</a>
+        <button id="sample-file-control" type="button" class="demo-btn demo-btn-context" data-action="sample-file" hidden>Use sample PDF</button>
+        <button id="release-feedback-control" type="button" class="demo-btn demo-btn-context" data-action="release-feedback" hidden>Release sample feedback</button>
+        <button type="button" class="demo-btn" data-action="presentation-mode" aria-pressed="false">Presentation mode</button>
+        <button type="button" class="demo-btn demo-btn-quiet" data-action="reset">Restart demo</button>
+      </div>
     </div>
-    <p class="project-disclaimer">Student course project prototype. Not an official University of Toronto or Quercus page. All course data is fictional.</p>
-    <p id="setup-note">After setup: a fictional, consistently organized course. This local simulation is not connected to Quercus.</p>
+    <p class="demo-note"><strong class="project-disclaimer">Student course project prototype. Not an official University of Toronto or Quercus page. All course data is fictional.</strong> <span id="setup-note">After setup: a fictional, consistently organized course. This local simulation is not connected to Quercus.</span></p>
   </footer>
 
   <dialog id="context-dialog" aria-labelledby="context-title"><h2 id="context-title">Outside this walkthrough</h2><p id="context-message"></p><form method="dialog"><button class="button">Close</button></form></dialog>
@@ -1196,6 +1235,7 @@ window.__assetUrl = function (p) {
     document.getElementById('setup-note').textContent = state.setup === 'before' ? `${C.before.label}${view.fallback ? ` ${C.before.fallbackNotice}` : ''}` : 'After setup: a fictional, consistently organized course. This local simulation is not connected to Quercus.';
     document.getElementById('sample-file-control').hidden = route !== 'submit';
     const release = document.getElementById('release-feedback-control');
+    release.hidden = !submitted();
     release.disabled = !submitted() || (state.feedbackReleased && (state.gradeAttempt || 1) >= latest().attempt);
     release.textContent = release.disabled && state.feedbackReleased ? 'Sample feedback released' : state.feedbackReleased ? 'Release feedback for latest attempt' : 'Release sample feedback';
     document.title = `${view.label} · Quercus course template V2`;
