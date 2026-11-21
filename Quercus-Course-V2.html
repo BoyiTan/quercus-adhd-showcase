@@ -72,6 +72,16 @@
 @media(max-width:420px){.demo-setup{width:100%;justify-content:space-between}.demo-btn{flex:1 1 auto;justify-content:center}}
 @media print{.demo-controls{display:none}}
 
+/* Easier-to-close evidence dialog (2026-11-21): fixed header, scrolling body, large labelled close button */
+.wide-dialog[open]{display:flex;flex-direction:column;max-height:min(85vh,900px);overflow:hidden}
+.wide-dialog>header{flex:none;background:#fff}
+.wide-dialog>header+div{overflow-y:auto;padding:20px}
+.dialog-close{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 14px;border:1px solid var(--q-line);border-radius:6px;background:#fff;color:var(--q-text);font-size:15px;font-weight:700;cursor:pointer}
+.dialog-close img{width:16px;height:16px}
+.dialog-close:hover{background:var(--q-secondary)}
+.dialog-close:focus-visible{outline:3px solid var(--q-link);outline-offset:2px}
+dialog::backdrop{cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -142,7 +152,7 @@
   </footer>
 
   <dialog id="context-dialog" aria-labelledby="context-title"><h2 id="context-title">Outside this walkthrough</h2><p id="context-message"></p><form method="dialog"><button class="button">Close</button></form></dialog>
-  <dialog id="evidence-dialog" class="wide-dialog" aria-labelledby="evidence-title"><header><h2 id="evidence-title">Why this design?</h2><form method="dialog"><button class="icon-button" aria-label="Close design evidence"><img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTkyMCAxOTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogICAgPHBhdGggZD0iTTk1NC42NCA4MjYuNDE4IDQyNi42NjcgMjk4LjQ0NSAyOTguNDQ1IDQyNi42NjcgODI2LjQxOCA5NTQuNjRsLTUyNy45NzMgNTI3Ljk3MyAxMjguMjIyIDEyOC4yMjIgNTI3Ljk3My01MjcuOTczIDUyNy45NzMgNTI3Ljk3MyAxMjguMjIyLTEyOC4yMjItNTI3Ljk3My01MjcuOTczIDUyNy45NzMtNTI3Ljk3My0xMjguMjIyLTEyOC4yMjJ6Ii8+Cjwvc3ZnPgo=" alt=""></button></form></header><div id="evidence-content"></div></dialog>
+  <dialog id="evidence-dialog" class="wide-dialog" aria-labelledby="evidence-title"><header><h2 id="evidence-title">Why this design?</h2><form method="dialog"><button class="dialog-close"><img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTkyMCAxOTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogICAgPHBhdGggZD0iTTk1NC42NCA4MjYuNDE4IDQyNi42NjcgMjk4LjQ0NSAyOTguNDQ1IDQyNi42NjcgODI2LjQxOCA5NTQuNjRsLTUyNy45NzMgNTI3Ljk3MyAxMjguMjIyIDEyOC4yMjIgNTI3Ljk3My01MjcuOTczIDUyNy45NzMgNTI3Ljk3MyAxMjguMjIyLTEyOC4yMjItNTI3Ljk3My01MjcuOTczIDUyNy45NzMtNTI3Ljk3My0xMjguMjIyLTEyOC4yMjJ6Ii8+Cjwvc3ZnPgo=" alt="">Close</button></form></header><div id="evidence-content"></div></dialog>
   <dialog id="rubric-dialog" class="rubric-dialog" aria-labelledby="rubric-dialog-title"><header><h2 id="rubric-dialog-title">Rubric</h2><form method="dialog"><button class="icon-button" aria-label="Close rubric"><img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTkyMCAxOTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogICAgPHBhdGggZD0iTTk1NC42NCA4MjYuNDE4IDQyNi42NjcgMjk4LjQ0NSAyOTguNDQ1IDQyNi42NjcgODI2LjQxOCA5NTQuNjRsLTUyNy45NzMgNTI3Ljk3MyAxMjguMjIyIDEyOC4yMjIgNTI3Ljk3My01MjcuOTczIDUyNy45NzMgNTI3Ljk3MyAxMjguMjIyLTEyOC4yMjItNTI3Ljk3My01MjcuOTczIDUyNy45NzMtNTI3Ljk3My0xMjguMjIyLTEyOC4yMjJ6Ii8+Cjwvc3ZnPgo=" alt=""></button></form></header><div id="rubric-dialog-content"></div></dialog>
   <div id="live-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 <script>
@@ -1169,6 +1179,8 @@ window.__assetUrl = function (p) {
     }
     if (event.target.id === 'feedback-comment-form') { event.preventDefault(); const field = document.getElementById('feedback-comment'), text = field.value.trim(); if (!text) { field.focus(); return; } state.comments.push({ text, at: demoNow() }); render(); document.getElementById('feedback-comment')?.focus(); announce('Demo: comment saved in this browser tab only.'); }
   });
+  // Clicking the dimmed backdrop (outside the dialog box) closes any dialog; Escape is handled natively.
+  document.querySelectorAll('dialog').forEach(dialog => dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); }));
   document.getElementById('rubric-dialog').addEventListener('close', () => { document.getElementById('rubric-dialog-content').innerHTML = ''; });
   window.addEventListener('popstate', () => { const route = normalizeRoute(location.hash.slice(1)); if (route && route !== state.route) { state.route = route; render(true); } });
   window.addEventListener('hashchange', () => { const route = normalizeRoute(location.hash.slice(1)); if (route && route !== state.route) { state.route = route; render(true); } });
